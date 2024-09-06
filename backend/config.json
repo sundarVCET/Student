@@ -1,0 +1,7 @@
+{
+    "Port": ":8080",
+    "MongoURL": "mongodb://localhost:27017",
+    "MongoDBName": "School",
+    "GinMode":"debug"
+
+}

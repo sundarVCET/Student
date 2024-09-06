@@ -1,0 +1,71 @@
+basePath: /
+definitions:
+  model.Admin:
+    properties:
+      _id:
+        type: string
+      bytepassword:
+        items:
+          type: integer
+        type: array
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      role:
+        default: Admin
+        type: string
+      schoolName:
+        type: string
+      token:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - schoolName
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: school project service
+  title: SCHOOL_PROJECT
+  version: "1.0"
+paths:
+  /AdminReg:
+    post:
+      consumes:
+      - application/json
+      description: Register a new admin with the provided details.
+      parameters:
+      - description: Admin Registration Details
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/model.Admin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully registered admin
+          schema:
+            $ref: '#/definitions/model.Admin'
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register a new admin
+      tags:
+      - Admin
+swagger: "2.0"
