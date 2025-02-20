@@ -2,12 +2,12 @@ package main
 
 import (
 	"log"
-	"student/config"
-	db "student/database"
+	"student-api/config"
+	db "student-api/database"
 
-	_ "student/docs" // This is to ensure docs are generated
-	router "student/router"
-	validate "student/validate"
+	_ "student-api/docs" // This is to ensure docs are generated
+	router "student-api/router"
+	validate "student-api/validate"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	db "student/database"
-	"student/model"
+	db "student-api/database"
+	"student-api/model"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"

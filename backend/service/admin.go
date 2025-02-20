@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"student/auth"
-	db "student/database"
-	"student/model"
+	"student-api/auth"
+	db "student-api/database"
+	"student-api/model"
 
 	"golang.org/x/crypto/bcrypt"
 

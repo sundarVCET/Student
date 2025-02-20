@@ -2,8 +2,8 @@ package router
 
 import (
 	"net/http"
-	handler "student/handler"
-	middleware "student/middleware"
+	handler "student-api/handler"
+	middleware "student-api/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"

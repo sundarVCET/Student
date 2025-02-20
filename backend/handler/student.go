@@ -3,9 +3,9 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	"student/model"
-	service "student/service"
-	validate "student/validate"
+	"student-api/model"
+	service "student-api/service"
+	validate "student-api/validate"
 
 	"github.com/gin-gonic/gin"
 )

@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"strings"
-	"student/auth"
+	"student-api/auth"
 
 	"github.com/gin-gonic/gin"
 )

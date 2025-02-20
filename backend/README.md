@@ -1,3 +1,19 @@
+Steps to 🔹 Run Mongodb
+
+sudo service mongod start 
+sudo service mongod status
+
+Steps to 🔹 Build & Run Golang
+
+go mod init student-api
+go build
+execute binary file (./student-api)
+
+Steps to 🔹 Build & Run Docker
+
+sudo docker build -t student-api .
+sudo docker run -p 8080:8080 student-api
+
 step :1 Find the process ID:
 
 lsof -i :PORT_NUMBER
@@ -8,8 +24,8 @@ kill -9 PID
 
 🔹 Build & Run
 
-docker build -t student-api .
-docker run -p 8080:8080 student-api
+sudo docker build -t student-api .
+sudo docker run -p 8080:8080 student-api
 
 
 After successfully building the Docker image, follow these steps to run your Go application inside a container:

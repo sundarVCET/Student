@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 	"strings"
-	db "student/database"
-	"student/model"
+	db "student-api/database"
+	"student-api/model"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"

@@ -2,8 +2,8 @@ package handler
 
 import (
 	"net/http"
-	"student/model"
-	service "student/service"
+	"student-api/model"
+	service "student-api/service"
 
 	"github.com/gin-gonic/gin"
 )
