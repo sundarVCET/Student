@@ -13,7 +13,10 @@ import (
 var Admins, Complains, Notices, Students, Subjects, Sclasses, Teachers, Image *mongo.Collection
 var Bucket *gridfs.Bucket
 
-var ctx = context.TODO()
+var (
+	client *mongo.Client
+	ctx    = context.TODO()
+)
 
 func Init() {
 	clientOptions := options.Client().ApplyURI(viper.GetString("MongoURL"))
@@ -47,4 +50,18 @@ func Init() {
 		panic(err)
 	}
 
+}
+
+func CloseClientDB() error {
+	if client == nil {
+		log.Println("MongoDB client is already nil, skipping disconnect.")
+		return nil
+	}
+	err := client.Disconnect(ctx)
+	if err != nil {
+		log.Fatal("Error disconnecting MongoDB client: ", err)
+		return err
+	}
+	log.Println("MongoDB connection closed.")
+	return nil
 }
