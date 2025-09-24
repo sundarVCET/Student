@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import axios from 'axios';
 import { useProfile } from '../context/ProfileContext'; // Import useProfile
 import { useSelector } from 'react-redux';
@@ -10,8 +10,10 @@ const ImageUploadPage = () => {
   const [data, setData] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
-  const {  updateProfileImage } = useProfile(); // Use the custom hook
+  const { updateProfileImage } = useProfile(); // Use the custom hook
   const { currentUser } = useSelector(state => state.user);
+  const [successMessage, setSuccessMessage] = useState(''); // ✅ new state
+  const fileInputRef = useRef(null); // ✅ ref for file input
 
   const userId = currentUser._id;
   const userRole = currentUser.role;
@@ -51,9 +53,25 @@ const ImageUploadPage = () => {
       //const response = await axios.post('http://localhost:8080/AddImage', payload);
       console.log('Response:', response.data);
 
-      if (response.data && response.data.userId ){
-       
+      if (response.data && response.data.userId) {
+
         updateProfileImage(response.data.userId);
+        setSuccessMessage('Image uploaded successfully! ✅'); // ✅ show success
+        // Option 1: reset form
+        setImageName('');
+        setDescription('');
+        setFileType('');
+        setData('');
+        setSelectedFile(null);
+        setPreviewUrl('');
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = ''; // clear file input
+        }
+
+        // Option 2 (if you need full reload):
+        // window.location.reload();
+
       }
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -86,7 +104,12 @@ const ImageUploadPage = () => {
       <h1>Upload the Image</h1>
       <br />
       <div>
-        <input type="file" accept="image/png,image/jpeg" onChange={handleImageChange} />
+        <input
+          type="file"
+          accept="image/png,image/jpeg"
+          onChange={handleImageChange}
+          ref={fileInputRef} // ✅ attach ref
+        />
         <input
           type="text"
           placeholder="Description"
@@ -98,6 +121,7 @@ const ImageUploadPage = () => {
         </button>
       </div>
       <br />
+      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>} {/* ✅ success msg */}
       {previewUrl && (
         <div>
           <h3>Image Preview:</h3>
