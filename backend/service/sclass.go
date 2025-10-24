@@ -2,8 +2,10 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"student-api/cache"
 	db "student-api/database"
 	"student-api/model"
 	"time"
@@ -51,6 +53,16 @@ func (classRepo *SClassRepository) SclassCreate(request *model.SclassRequest) (*
 	sclassRes.UpdatedAt = time.Now()
 	sclassRes.School = id
 	sclassRes.Id = result.InsertedID.(primitive.ObjectID).Hex()
+
+	// 2️⃣ Invalidate cache for that school
+	cacheKey := fmt.Sprintf("school:%s:sclasses", request.AdminId)
+	_, delErr := cache.Rdb.Del(context.Background(), cacheKey).Result()
+	if delErr != nil {
+		fmt.Println("Error deleting Redis cache:", delErr)
+	} else {
+		fmt.Println("Cache invalidated for school:", request.AdminId)
+	}
+
 	return &sclassRes, nil
 
 }
@@ -63,6 +75,21 @@ func (classRepo *SClassRepository) SclassList(Id string) ([]*model.SclassRes, er
 	id, err := primitive.ObjectIDFromHex(Id)
 	if err != nil {
 		return nil, fmt.Errorf("invalid ObjectId: %v", err)
+
+	}
+
+	// 2️⃣ Define Redis cache key
+	cacheKey := fmt.Sprintf("school:%s:sclasses", Id)
+	fmt.Println("OD", cacheKey)
+	cachedData, err := cache.Rdb.Get(context.Background(), cacheKey).Result()
+
+	if err == nil {
+		fmt.Println("✅ Data from Redis Cache")
+
+		// Decode JSON into struct
+		if jsonErr := json.Unmarshal([]byte(cachedData), &sclasses); jsonErr == nil {
+			return sclasses, nil
+		}
 	}
 
 	filter := bson.M{"school": id}
@@ -94,7 +121,11 @@ func (classRepo *SClassRepository) SclassList(Id string) ([]*model.SclassRes, er
 		return nil, errors.New("no sclasses found")
 	}
 
-	fmt.Printf("Found multiple documents: %+v\n", sclasses)
+	// 5️⃣ Save data to Redis for 30 minutes
+	jsonData, _ := json.Marshal(sclasses)
+	cache.Rdb.Set(context.Background(), cacheKey, jsonData, 3*time.Minute)
+
+	fmt.Println("✅ Cached data in Redis")
 
 	return sclasses, nil
 }

@@ -82,10 +82,12 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"student-api/cache"
 	"student-api/config"
 	db "student-api/database"
 	"syscall"
@@ -119,6 +121,7 @@ func main() {
 	config.LoadConfig()
 	validate.Init()
 	db.Init()
+	cache.InitRedis()
 
 	// Setup Gin router
 	routerHandler := gin.New()
@@ -160,6 +163,12 @@ func main() {
 	// Close database connections
 	db.CloseClientDB()
 	log.Println("Database connection closed.")
+	cache.ClearAllCache(cache.Rdb)
 
+	if err := cache.Rdb.Close(); err != nil {
+		fmt.Println("Error closing Redis:", err)
+	} else {
+		fmt.Println("Redis connection closed.")
+	}
 	log.Println("Shutdown complete.")
 }
