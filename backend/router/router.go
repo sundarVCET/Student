@@ -3,7 +3,6 @@ package router
 import (
 	"net/http"
 	handler "student-api/handler"
-	middleware "student-api/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -25,6 +24,9 @@ func SetupRoutes(router *gin.Engine) {
 
 	//r.Use(static.Serve("/", static.LocalFile("./view", true))) //Serve frontend static files, ex: ReactJS
 
+	// router.Use(gin.LoggerWithWriter(middleware.LogWriter()))
+	// router.Use(gin.CustomRecovery(middleware.AppRecovery()))
+
 	// CORS middleware
 	router.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -40,10 +42,10 @@ func SetupRoutes(router *gin.Engine) {
 		c.Next()
 	})
 	// Define the paths to exclude from authentication
-	excludedPaths := []string{"/StudentReg", "/StudentLogin", "/AdminReg", "/AdminLogin", "/TeacherReg", "/TeacherLogin"}
+	//excludedPaths := []string{"/StudentReg", "/StudentLogin", "/AdminReg", "/AdminLogin", "/TeacherReg", "/TeacherLogin"}
 
 	// Apply the custom middleware globally
-	router.Use(middleware.AuthWithExceptions(excludedPaths))
+	//router.Use(middleware.AuthWithExceptions(excludedPaths))
 	// Admin
 
 	router.POST("/AdminReg", handler.AdminRegister)
